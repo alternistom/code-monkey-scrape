@@ -57,7 +57,7 @@ def results():
 
     urlnostrip = request.args.get('url')
 
-    url = urlnotrip.strip()
+    url = urlnostrip.strip()
 
     page = requests.get(url)
     soup = BeautifulSoup(page.text, 'xml')
@@ -74,6 +74,8 @@ def results():
 
     onlySecs = soup.findAll("invstOrSec")
 
+    csvnamenostring = "NPORT_P__" + str(fundNameString) + "_" + reportDateString + ".csv"
+    csvname = str(csvnamenostring)
     counter = 0
 
     header = "Issue name, ISIN, Share, Value, Long-Short, Asset category, Total assets:," + str(totAssets)
@@ -190,7 +192,7 @@ def results():
 
         counter = counter + 1
     
-    return render_template('results.html', results=results, fundNameString=fundNameString, reportDateString=reportDateString, regCIK=regCIK, totAssets=totAssets)
+    return render_template('results.html', results=results, fundNameString=fundNameString, reportDateString=reportDateString, regCIK=regCIK, totAssets=totAssets, csvname=csvname)
 
 
 ######################################################
