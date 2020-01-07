@@ -7,24 +7,58 @@
       <!-- Download form -->
       <div class="col">
         <!-- Download button-->
-        <button class="btn btn-success col-sm mt-2" type='button' onclick="exportTableToCSV('results.csv')">Download</button>
+        <button class="btn btn-success col-sm mt-2" type='button' onclick="exportTableToCSV('results.csv')">Download in .csv</button>
       </div>
     
       <!-- Results table-->
+
       <table class="table mt-3" id="tags">
+
         <thead>
           <tr>
-            {% for header in results[0] %}
-              <th scope="col">{{ header }}</th>
-            {% endfor %}
+              <th scope="col">{{ fundNameString }}</th>
+              <th scope="col"></th>
+              <th scope="col">Total Assets:</th>
+              <th scope="col">{{ totAssets }}</th>
+              <th scope="col">Report Date:</th>
+              <th scope="col">{{ reportDateString }}</th>
           </tr>
         </thead>
+
+        <thead>
+          <tr>
+              <th scope="col">CIK: {{ regCIK }}</th>
+              <th scope="col"></th>
+              <th scope="col"></th>
+              <th scope="col"></th>
+              <th scope="col"></th>
+              <th scope="col"></th>
+          </tr>
+        </thead>
+
+      </table>
+
+      <table class="table mt-3">
+        <thead>
+          <tr id="download">
+              <th scope="col">Issue Name</th>
+              <th scope="col">ISIN</th>
+              <th scope="col">Share Number</th>
+              <th scope="col">Market Value</th>
+              <th scope="col">Long/Short</th>
+              <th scope="col">Asset Type</th>
+          </tr>
+        </thead>
+
         <tbody>
-          {% for row in results %}
-            <tr>
-              {% for key, value in row.items() %}
+          {% for issue, isin, share, value, ls, assetcat in results %}
+            <tr id="download">
+                <td>{{ issue }}</td>
+                <td>{{ isin }}</td>
+                <td>{{ share }}</td>
                 <td>{{ value }}</td>
-              {% endfor %}
+                <td>{{ ls }}</td>
+                <td>{{ assetcat }}</td>
             </tr>
           {% endfor %}
         </tbody>
@@ -61,7 +95,7 @@
   
     function exportTableToCSV(filename) {
       var csv = [];
-      var rows = document.querySelectorAll("table tr");
+      var rows = document.querySelectorAll("#download");
       
       for (var i = 0; i < rows.length; i++) {
         var row = [], cols = rows[i].querySelectorAll("td, th");
@@ -69,7 +103,7 @@
         for (var j = 0; j < cols.length; j++) 
           row.push(cols[j].innerText);
         
-        csv.push(row.join(";"));        
+        csv.push(row.join(","));        
       }
 
       // Download CSV file
