@@ -1,17 +1,10 @@
-{% extends 'layout_parserella.html' %}
+{% extends 'layout.html' %}
 
 {% block body %}
 
   <div class="container">
-
-    
-
     <div class="row">
       <!-- Download form -->
-
-      
-      
-
       <div class="col">
         <!-- Download button-->
         <button class="btn btn-success col-sm mt-2" type='button' onclick="exportTableToCSV('results.csv')">Download in .csv</button>
@@ -22,58 +15,23 @@
       
       
 
-     
     <div class="row">
-      <div class="col">
-        <ul>
-          <li><b>Fundname:</b> {{ fundNameString }}</li>
-          <li><b>Report Date:</b> {{ reportDateString }}</li>
-          <li><b>Total Assets:</b> {{ totAssets }}</li>
-          <li><b>CIK:</b> {{ regCIK }}</li>
-          <li><b>Filename:</b> {{ csvname }}</li>
-        </ul>
-        <br>
-      </div>
-
+     
       
 
       <table class="table mx-auto w-auto small">
         <thead>
           <tr id="download">
-              <th scope="col">Issue Name</th>
-              <th scope="col"> </th>
-              <th scope="col"> </th>
-              <th scope="col">Market Value</th>
-              <th scope="col">Share Number</th>
-              <th scope="col"> </th>
-              <th scope="col"> </th>
-              <th scope="col"> </th>
-              <th scope="col">Ticker</th>
-              <th scope="col">CUSIP</th>
-              <th scope="col"> </th>
-              <th scope="col">ISIN</th>
-              <th scope="col">Long/Short</th>
-              <th scope="col">Asset Type</th>
+              <th scope="col">Text</th>
+              <th scope="col">Link</th>
           </tr>
         </thead>
 
         <tbody>
-          {% for issue, isin, share, value, ls, assetcat, tickerPlusCountry, cusip in results %}
+          {% for text, link in cnmvresults %}
             <tr id="download">
-                <td>{{ issue }}</td>
-                <td> </td>
-                <td> </td>
-                <td>{{ value }}</td>
-                <td>{{ share }}</td>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
-                <td>{{ tickerPlusCountry }}</td>
-                <td>{{ cusip }} </td>
-                <td></td>
-                <td>{{ isin }}</td>
-                <td>{{ ls }}</td>
-                <td>{{ assetcat }}</td>
+                <td>{{ text }}</td>
+                <td>{{ link }}</td>
             </tr>
           {% endfor %}
         </tbody>
@@ -89,7 +47,7 @@
         <br><br>
       </div>
     </div>
-
+    
   </div>
   
   <script type="text/javascript">
@@ -105,7 +63,7 @@
       downloadLink = document.createElement("a");
 
       // File name
-      downloadLink.download = filename={{ csvname|tojson }};
+      downloadLink.download = filename;
 
       // Create a link to the file
       downloadLink.href = window.URL.createObjectURL(csvFile);
