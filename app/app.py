@@ -38,6 +38,10 @@ app.secret_key = "He thrust every elf Far back on the shelf High up on the mount
 def home():
     return render_template('home.html')
 
+@app.route('/focus')
+def focus():
+    return render_template('focus.html')
+
 @app.route('/scrape')
 def scrape():
     #flash(request.args.get('url'), 'success')
@@ -346,7 +350,7 @@ def danskeFunds():
         fundname = container.findAll("span", {"class":"headline-text"})
         fundname_text = fundname[0].text.replace(",", "").strip()
         isin_locate = container.findAll("td", {"class":"table-data-value"})
-        isin_text = isin_locate[0].text.replace(",", "").strip()
+        isin_text = isin_locate[1].text.replace(",", "").strip()
         
         
         full_link_for_name_text = "https://www.danskeinvest.fi/web/show_fund.produkt?p_nId=1181&p_nFundgroup=117&p_nFund=" + id
@@ -369,39 +373,24 @@ def danskeFunds():
             
         NAV_four_info_TA_date = fund_NAV_list.find("td", {"class":"tTop tleft tOdd"})
         NAV_four_info_TA_val = fund_NAV_list.find("td", {"class":"tTop trightbold tOdd bordered_last"})
-        NAV_four_info_NAV_date = fund_NAV_list.find("td", {"class":"tTop tleft tEven"})
-        NAV_four_info_NAV_val = fund_NAV_list.find("td", {"class":"tTop trightbold tEven bordered_last"})
             
-        TA_date = NAV_four_info_TA_date
-        try:
-            TA_date_text = TA_date.text.replace(",", "").strip()
-        except:
+        if NAV_four_info_TA_date == None:
             TA_date_text = "NO INFO ON WEBSITE"
-            
-        TA_val = NAV_four_info_TA_val
-        try:
-            TA_val_text = TA_val.text.replace(",", "").strip()
-        except:
+        else:
+            TA_date_text = NAV_four_info_TA_date.text.replace(",", "").strip()
+        
+
+        if NAV_four_info_TA_val == None:
             TA_date_text = "NO INFO ON WEBSITE"
-            
-        NAV_date = NAV_four_info_NAV_date
-        try:
-            NAV_date_text = NAV_date.text.replace(",", "").strip()
-        except:
-            TA_date_text = "NO INFO ON WEBSITE"
-            
-        NAV_val = NAV_four_info_NAV_val
-        try:
-            NAV_val_text = NAV_val.text.replace(",", "").strip()
-        except:
-            TA_date_text = "NO INFO ON WEBSITE"
+        else:
+            TA_val_text = NAV_four_info_TA_val.text.replace(",", "").strip()
         
         de_counter = de_counter + 1
         
-        row = (".de" + "," + fundname_text + "," + isin_text + "," + NAV_date_text + "," + NAV_val_text + "," + TA_date_text + "," + TA_val_text + "," + full_link_for_source + "\n").split(",")
+        row = (fundname_text + "," + isin_text + "," + TA_date_text + "," + TA_val_text + "\n").split(",")
         danskeFunds.append(row)
 
-        print(".de | Scraping " + fundname_text + " is done!")
+        #print(".de | Scraping " + fundname_text + " is done!")
     
     
     print("")
@@ -436,7 +425,7 @@ def danskeFunds():
         fundname = container.findAll("span", {"class":"headline-text"})
         fundname_text = fundname[0].text.replace(",", "").strip()
         isin_locate = container.findAll("td", {"class":"table-data-value"})
-        isin_text = isin_locate[0].text.replace(",", "").strip()
+        isin_text = isin_locate[1].text.replace(",", "").strip()
         
         
         full_link_for_name_text = "https://www.danskeinvest.fi/web/show_fund.produkt?p_nId=1181&p_nFundgroup=75&p_nFund=" + id
@@ -460,37 +449,22 @@ def danskeFunds():
             
         NAV_four_info_TA_date = fund_NAV_list.find("td", {"class":"tTop tleft tOdd"})
         NAV_four_info_TA_val = fund_NAV_list.find("td", {"class":"tTop trightbold tOdd bordered_last"})
-        NAV_four_info_NAV_date = fund_NAV_list.find("td", {"class":"tTop tleft tEven"})
-        NAV_four_info_NAV_val = fund_NAV_list.find("td", {"class":"tTop trightbold tEven bordered_last"})
-            
-        TA_date = NAV_four_info_TA_date
-        try:
-            TA_date_text = TA_date.text.replace(",", "").strip()
-        except:
+         
+        if NAV_four_info_TA_date == None:
             TA_date_text = "NO INFO ON WEBSITE"
-            
-        TA_val = NAV_four_info_TA_val
-        try:
-            TA_val_text = TA_val.text.replace(",", "").strip()
-        except:
+        else:
+            TA_date_text = NAV_four_info_TA_date.text.replace(",", "").strip()
+        
+
+        if NAV_four_info_TA_val == None:
             TA_date_text = "NO INFO ON WEBSITE"
-            
-        NAV_date = NAV_four_info_NAV_date
-        try:
-            NAV_date_text = NAV_date.text.replace(",", "").strip()
-        except:
-            TA_date_text = "NO INFO ON WEBSITE"
-            
-        NAV_val = NAV_four_info_NAV_val
-        try:
-            NAV_val_text = NAV_val.text.replace(",", "").strip()
-        except:
-            TA_date_text = "NO INFO ON WEBSITE"
+        else:
+            TA_val_text = NAV_four_info_TA_val.text.replace(",", "").strip()
         
         dk_counter = dk_counter + 1
         
         
-        row = (".dk" + "," + fundname_text + "," + isin_text + "," + NAV_date_text + "," + NAV_val_text + "," + TA_date_text + "," + TA_val_text + "," + full_link_for_source + "\n").split(",")
+        row = (fundname_text + "," + isin_text + "," + TA_date_text + "," + TA_val_text + "\n").split(",")
         danskeFunds.append(row)
         
 
@@ -523,7 +497,7 @@ def danskeFunds():
         fundname = container.findAll("span", {"class":"headline-text"})
         fundname_text = fundname[0].text.replace(",", "").strip()
         isin_locate = container.findAll("td", {"class":"table-data-value"})
-        isin_text = isin_locate[0].text.replace(",", "").strip()
+        isin_text = isin_locate[1].text.replace(",", "").strip()
         
         
         full_link_for_name_text = "https://www.danskeinvest.fi/web/show_fund.produkt?p_nId=1181&p_nFundgroup=75&p_nFund=" + id
@@ -547,39 +521,25 @@ def danskeFunds():
             
         NAV_four_info_TA_date = fund_NAV_list.find("td", {"class":"tTop tleft tOdd"})
         NAV_four_info_TA_val = fund_NAV_list.find("td", {"class":"tTop trightbold tOdd bordered_last"})
-        NAV_four_info_NAV_date = fund_NAV_list.find("td", {"class":"tTop tleft tEven"})
-        NAV_four_info_NAV_val = fund_NAV_list.find("td", {"class":"tTop trightbold tEven bordered_last"})
+
             
-        TA_date = NAV_four_info_TA_date
-        try:
-            TA_date_text = TA_date.text.replace(",", "").strip()
-        except:
+        if NAV_four_info_TA_date == None:
             TA_date_text = "NO INFO ON WEBSITE"
-            
-        TA_val = NAV_four_info_TA_val
-        try:
-            TA_val_text = TA_val.text.replace(",", "").strip()
-        except:
+        else:
+            TA_date_text = NAV_four_info_TA_date.text.replace(",", "").strip()
+        
+
+        if NAV_four_info_TA_val == None:
             TA_date_text = "NO INFO ON WEBSITE"
-            
-        NAV_date = NAV_four_info_NAV_date
-        try:
-            NAV_date_text = NAV_date.text.replace(",", "").strip()
-        except:
-            TA_date_text = "NO INFO ON WEBSITE"
-            
-        NAV_val = NAV_four_info_NAV_val
-        try:
-            NAV_val_text = NAV_val.text.replace(",", "").strip()
-        except:
-            TA_date_text = "NO INFO ON WEBSITE"
+        else:
+            TA_val_text = NAV_four_info_TA_val.text.replace(",", "").strip()
         
         dk2_counter = dk2_counter + 1
         
-        row = (".dk" + "," + fundname_text + "," + isin_text + "," + NAV_date_text + "," + NAV_val_text + "," + TA_date_text + "," + TA_val_text + "," + full_link_for_source + "\n").split(",")
+        row = (fundname_text + "," + isin_text + "," + TA_date_text + "," + TA_val_text + "\n").split(",")
         danskeFunds.append(row)
         
-        print(".dk | Scraping " + fundname_text + " is done!")
+        #print(".dk | Scraping " + fundname_text + " is done!")
         
         
         
@@ -616,7 +576,7 @@ def danskeFunds():
         fundname = container.findAll("span", {"class":"headline-text"})
         fundname_text = fundname[0].text.replace(",", "").strip()
         isin_locate = container.findAll("td", {"class":"table-data-value"})
-        isin_text = isin_locate[0].text.replace(",", "").strip()
+        isin_text = isin_locate[1].text.replace(",", "").strip()
         
         
         full_link_for_name_text = "https://www.danskeinvest.fi/web/show_fund.produkt?p_nId=1181&p_nFundgroup=75&p_nFund=" + id
@@ -640,40 +600,25 @@ def danskeFunds():
             
         NAV_four_info_TA_date = fund_NAV_list.find("td", {"class":"tTop tleft tOdd"})
         NAV_four_info_TA_val = fund_NAV_list.find("td", {"class":"tTop trightbold tOdd bordered_last"})
-        NAV_four_info_NAV_date = fund_NAV_list.find("td", {"class":"tTop tleft tEven"})
-        NAV_four_info_NAV_val = fund_NAV_list.find("td", {"class":"tTop trightbold tEven bordered_last"})
-            
-        TA_date = NAV_four_info_TA_date
-        try:
-            TA_date_text = TA_date.text.replace(",", "").strip()
-        except:
+        
+        if NAV_four_info_TA_date == None:
             TA_date_text = "NO INFO ON WEBSITE"
-            
-        TA_val = NAV_four_info_TA_val
-        try:
-            TA_val_text = TA_val.text.replace(",", "").strip()
-        except:
+        else:
+            TA_date_text = NAV_four_info_TA_date.text.replace(",", "").strip()
+        
+
+        if NAV_four_info_TA_val == None:
             TA_date_text = "NO INFO ON WEBSITE"
-            
-        NAV_date = NAV_four_info_NAV_date
-        try:
-            NAV_date_text = NAV_date.text.replace(",", "").strip()
-        except:
-            TA_date_text = "NO INFO ON WEBSITE"
-            
-        NAV_val = NAV_four_info_NAV_val
-        try:
-            NAV_val_text = NAV_val.text.replace(",", "").strip()
-        except:
-            TA_date_text = "NO INFO ON WEBSITE"
+        else:
+            TA_val_text = NAV_four_info_TA_val.text.replace(",", "").strip()
         
         dk3_counter = dk3_counter + 1
         
         
-        row = (".se" + "," + fundname_text + "," + isin_text + "," + NAV_date_text + "," + NAV_val_text + "," + TA_date_text + "," + TA_val_text + "," + full_link_for_source + "\n").split(",")
+        row = (fundname_text + "," + isin_text + "," + TA_date_text + "," + TA_val_text + "\n").split(",")
         danskeFunds.append(row)
         
-        print(".dk | Scraping " + fundname_text + " is done!")
+        #print(".dk | Scraping " + fundname_text + " is done!")
         
         
         
@@ -709,7 +654,7 @@ def danskeFunds():
         fundname = container.findAll("span", {"class":"headline-text"})
         fundname_text = fundname[0].text.replace(",", "").strip()
         isin_locate = container.findAll("td", {"class":"table-data-value"})
-        isin_text = isin_locate[0].text.replace(",", "").strip()
+        isin_text = isin_locate[1].text.replace(",", "").strip()
         
         
         full_link_for_name_text = "https://www.danskeinvest.fi/web/show_fund.produkt?p_nId=1181&p_nFundgroup=75&p_nFund=" + id
@@ -733,40 +678,26 @@ def danskeFunds():
             
         NAV_four_info_TA_date = fund_NAV_list.find("td", {"class":"tTop tleft tOdd"})
         NAV_four_info_TA_val = fund_NAV_list.find("td", {"class":"tTop trightbold tOdd bordered_last"})
-        NAV_four_info_NAV_date = fund_NAV_list.find("td", {"class":"tTop tleft tEven"})
-        NAV_four_info_NAV_val = fund_NAV_list.find("td", {"class":"tTop trightbold tEven bordered_last"})
+
             
-        TA_date = NAV_four_info_TA_date
-        try:
-            TA_date_text = TA_date.text.replace(",", "").strip()
-        except:
+        if NAV_four_info_TA_date == None:
             TA_date_text = "NO INFO ON WEBSITE"
-            
-        TA_val = NAV_four_info_TA_val
-        try:
-            TA_val_text = TA_val.text.replace(",", "").strip()
-        except:
+        else:
+            TA_date_text = NAV_four_info_TA_date.text.replace(",", "").strip()
+        
+
+        if NAV_four_info_TA_val == None:
             TA_date_text = "NO INFO ON WEBSITE"
-            
-        NAV_date = NAV_four_info_NAV_date
-        try:
-            NAV_date_text = NAV_date.text.replace(",", "").strip()
-        except:
-            TA_date_text = "NO INFO ON WEBSITE"
-            
-        NAV_val = NAV_four_info_NAV_val
-        try:
-            NAV_val_text = NAV_val.text.replace(",", "").strip()
-        except:
-            TA_date_text = "NO INFO ON WEBSITE"
+        else:
+            TA_val_text = NAV_four_info_TA_val.text.replace(",", "").strip()
         
         dk4_counter = dk4_counter + 1
         
         
-        row = (".se" + "," + fundname_text + "," + isin_text + "," + NAV_date_text + "," + NAV_val_text + "," + TA_date_text + "," + TA_val_text + "," + full_link_for_source + "\n").split(",")
+        row = (fundname_text + "," + isin_text + "," + TA_date_text + "," + TA_val_text + "\n").split(",")
         danskeFunds.append(row)
         
-        print(".dk | Scraping " + fundname_text + " is done!")
+        #print(".dk | Scraping " + fundname_text + " is done!")
         
         
         
@@ -822,39 +753,25 @@ def danskeFunds():
             
         NAV_four_info_TA_date = fund_NAV_list.find("td", {"class":"tTop tleft tOdd"})
         NAV_four_info_TA_val = fund_NAV_list.find("td", {"class":"tTop trightbold tOdd bordered_last"})
-        NAV_four_info_NAV_date = fund_NAV_list.find("td", {"class":"tTop tleft tEven"})
-        NAV_four_info_NAV_val = fund_NAV_list.find("td", {"class":"tTop trightbold tEven bordered_last"})
+        
             
-        TA_date = NAV_four_info_TA_date
-        try:
-            TA_date_text = TA_date.text.replace(",", "").strip()
-        except:
+        if NAV_four_info_TA_date == None:
             TA_date_text = "NO INFO ON WEBSITE"
-            
-        TA_val = NAV_four_info_TA_val
-        try:
-            TA_val_text = TA_val.text.replace(",", "").strip()
-        except:
+        else:
+            TA_date_text = NAV_four_info_TA_date.text.replace(",", "").strip()
+        
+
+        if NAV_four_info_TA_val == None:
             TA_date_text = "NO INFO ON WEBSITE"
-            
-        NAV_date = NAV_four_info_NAV_date
-        try:
-            NAV_date_text = NAV_date.text.replace(",", "").strip()
-        except:
-            TA_date_text = "NO INFO ON WEBSITE"
-            
-        NAV_val = NAV_four_info_NAV_val
-        try:
-            NAV_val_text = NAV_val.text.replace(",", "").strip()
-        except:
-            TA_date_text = "NO INFO ON WEBSITE"
+        else:
+            TA_val_text = NAV_four_info_TA_val.text.replace(",", "").strip()
         
         
         
-        row = (".fi" + "," + fund_list_text + "," + isin_text + "," + NAV_date_text + "," + NAV_val_text + "," + TA_date_text + "," + TA_val_text + "," + full_link_for_name_text + "\n").split(",")
+        row = (fund_list_text + "," + isin_text + "," + TA_date_text + "," + TA_val_text + "\n").split(",")
         danskeFunds.append(row)
 
-        print(".fi | Scraping " + fund_list_text + " is done!")
+        #print(".fi | Scraping " + fund_list_text + " is done!")
         
         list_counter = list_counter + 1
 
@@ -867,8 +784,7 @@ def danskeFunds():
 
     # THIS IS THE END OF THE FI PART
 
-
-
+    
     return render_template('danske.html', danskeFunds=danskeFunds)
 
 
@@ -883,8 +799,6 @@ def danskeFunds2():
 
 
     danskeFunds = []
-
-
 
     # THIS IS THE LU PART
 
@@ -912,7 +826,7 @@ def danskeFunds2():
         fundname = container.findAll("span", {"class":"headline-text"})
         fundname_text = fundname[0].text.replace(",", "").strip()
         isin_locate = container.findAll("td", {"class":"table-data-value"})
-        isin_text = isin_locate[0].text.replace(",", "").strip()
+        isin_text = isin_locate[1].text.replace(",", "").strip()
         
         
         full_link_for_name_text = "https://www.danskeinvest.fi/web/show_fund.produkt?p_nId=1181&p_nFundgroup=81&p_nFund=" + id
@@ -929,47 +843,30 @@ def danskeFunds2():
         page_soup_NAV = soup(page_html_NAV, "html.parser")
         fund_NAV_list = page_soup_NAV.find("table", {"id":"dagenstalTabel"})
         
-        
-        
         #for nav_info in fund_NAV_list:
         NAV_four_info = fund_NAV_list.findAll("tr")
             
         NAV_four_info_TA_date = fund_NAV_list.find("td", {"class":"tTop tleft tOdd"})
         NAV_four_info_TA_val = fund_NAV_list.find("td", {"class":"tTop trightbold tOdd bordered_last"})
-        NAV_four_info_NAV_date = fund_NAV_list.find("td", {"class":"tTop tleft tEven"})
-        NAV_four_info_NAV_val = fund_NAV_list.find("td", {"class":"tTop trightbold tEven bordered_last"})
-            
-        TA_date = NAV_four_info_TA_date
-        try:
-            TA_date_text = TA_date.text.replace(",", "").strip()
-        except:
+        
+        if NAV_four_info_TA_date == None:
             TA_date_text = "NO INFO ON WEBSITE"
-            
-        TA_val = NAV_four_info_TA_val
-        try:
-            TA_val_text = TA_val.text.replace(",", "").strip()
-        except:
+        else:
+            TA_date_text = NAV_four_info_TA_date.text.replace(",", "").strip()
+        
+
+        if NAV_four_info_TA_val == None:
             TA_date_text = "NO INFO ON WEBSITE"
-            
-        NAV_date = NAV_four_info_NAV_date
-        try:
-            NAV_date_text = NAV_date.text.replace(",", "").strip()
-        except:
-            TA_date_text = "NO INFO ON WEBSITE"
-            
-        NAV_val = NAV_four_info_NAV_val
-        try:
-            NAV_val_text = NAV_val.text.replace(",", "").strip()
-        except:
-            TA_date_text = "NO INFO ON WEBSITE"
+        else:
+            TA_val_text = NAV_four_info_TA_val.text.replace(",", "").strip()
         
         lu_counter = lu_counter + 1
         
         
-        row = (".lu" + "," + fundname_text + "," + isin_text + "," + NAV_date_text + "," + NAV_val_text + "," + TA_date_text + "," + TA_val_text + "," + full_link_for_source + "\n").split(",")
+        row = (fundname_text + "," + isin_text + "," + TA_date_text + "," + TA_val_text + "\n").split(",")
         danskeFunds.append(row)
         
-        print(".lu | Scraping " + fundname_text + " is done!")
+        #print(".lu | Scraping " + fundname_text + " is done!")
         
         
         
@@ -1005,7 +902,7 @@ def danskeFunds2():
         fundname = container.findAll("span", {"class":"headline-text"})
         fundname_text = fundname[0].text.replace(",", "").strip()
         isin_locate = container.findAll("td", {"class":"table-data-value"})
-        isin_text = isin_locate[0].text.replace(",", "").strip()
+        isin_text = isin_locate[1].text.replace(",", "").strip()
         
         
         full_link_for_name_text = "https://www.danskeinvest.fi/web/show_fund.produkt?p_nId=1181&p_nFundgroup=90&p_nFund=" + id
@@ -1029,40 +926,25 @@ def danskeFunds2():
             
         NAV_four_info_TA_date = fund_NAV_list.find("td", {"class":"tTop tleft tOdd"})
         NAV_four_info_TA_val = fund_NAV_list.find("td", {"class":"tTop trightbold tOdd bordered_last"})
-        NAV_four_info_NAV_date = fund_NAV_list.find("td", {"class":"tTop tleft tEven"})
-        NAV_four_info_NAV_val = fund_NAV_list.find("td", {"class":"tTop trightbold tEven bordered_last"})
-            
-        TA_date = NAV_four_info_TA_date
-        try:
-            TA_date_text = TA_date.text.replace(",", "").strip()
-        except:
+        
+        if NAV_four_info_TA_date == None:
             TA_date_text = "NO INFO ON WEBSITE"
-            
-        TA_val = NAV_four_info_TA_val
-        try:
-            TA_val_text = TA_val.text.replace(",", "").strip()
-        except:
+        else:
+            TA_date_text = NAV_four_info_TA_date.text.replace(",", "").strip()
+        
+
+        if NAV_four_info_TA_val == None:
             TA_date_text = "NO INFO ON WEBSITE"
-            
-        NAV_date = NAV_four_info_NAV_date
-        try:
-            NAV_date_text = NAV_date.text.replace(",", "").strip()
-        except:
-            TA_date_text = "NO INFO ON WEBSITE"
-            
-        NAV_val = NAV_four_info_NAV_val
-        try:
-            NAV_val_text = NAV_val.text.replace(",", "").strip()
-        except:
-            TA_date_text = "NO INFO ON WEBSITE"
+        else:
+            TA_val_text = NAV_four_info_TA_val.text.replace(",", "").strip()
         
         no_counter = no_counter + 1 
         
         
-        row = (".no" + "," + fundname_text + "," + isin_text + "," + NAV_date_text + "," + NAV_val_text + "," + TA_date_text + "," + TA_val_text + "," + full_link_for_source + "\n").split(",")
+        row = (fundname_text + "," + isin_text + "," + TA_date_text + "," + TA_val_text + "\n").split(",")
         danskeFunds.append(row)
         
-        print(".no | Scraping " + fundname_text + " is done!")
+        #print(".no | Scraping " + fundname_text + " is done!")
         
         
     print("")
@@ -1097,7 +979,7 @@ def danskeFunds2():
         fundname = container.findAll("span", {"class":"headline-text"})
         fundname_text = fundname[0].text.replace(",", "").strip()
         isin_locate = container.findAll("td", {"class":"table-data-value"})
-        isin_text = isin_locate[0].text.replace(",", "").strip()
+        isin_text = isin_locate[1].text.replace(",", "").strip()
         
         
         full_link_for_name_text = "https://www.danskeinvest.fi/web/show_fund.produkt?p_nId=1181&p_nFundgroup=90&p_nFund=" + id
@@ -1121,39 +1003,24 @@ def danskeFunds2():
             
         NAV_four_info_TA_date = fund_NAV_list.find("td", {"class":"tTop tleft tOdd"})
         NAV_four_info_TA_val = fund_NAV_list.find("td", {"class":"tTop trightbold tOdd bordered_last"})
-        NAV_four_info_NAV_date = fund_NAV_list.find("td", {"class":"tTop tleft tEven"})
-        NAV_four_info_NAV_val = fund_NAV_list.find("td", {"class":"tTop trightbold tEven bordered_last"})
-            
-        TA_date = NAV_four_info_TA_date
-        try:
-            TA_date_text = TA_date.text.replace(",", "").strip()
-        except:
+        
+        if NAV_four_info_TA_date == None:
             TA_date_text = "NO INFO ON WEBSITE"
-            
-        TA_val = NAV_four_info_TA_val
-        try:
-            TA_val_text = TA_val.text.replace(",", "").strip()
-        except:
+        else:
+            TA_date_text = NAV_four_info_TA_date.text.replace(",", "").strip()
+        
+
+        if NAV_four_info_TA_val == None:
             TA_date_text = "NO INFO ON WEBSITE"
-            
-        NAV_date = NAV_four_info_NAV_date
-        try:
-            NAV_date_text = NAV_date.text.replace(",", "").strip()
-        except:
-            TA_date_text = "NO INFO ON WEBSITE"
-            
-        NAV_val = NAV_four_info_NAV_val
-        try:
-            NAV_val_text = NAV_val.text.replace(",", "").strip()
-        except:
-            TA_date_text = "NO INFO ON WEBSITE"
+        else:
+            TA_val_text = NAV_four_info_TA_val.text.replace(",", "").strip()
         
         no2_counter = no2_counter + 1 
         
-        row = (".no" + "," + fundname_text + "," + isin_text + "," + NAV_date_text + "," + NAV_val_text + "," + TA_date_text + "," + TA_val_text + "," + full_link_for_source + "\n").split(",")
+        row = (fundname_text + "," + isin_text + "," + TA_date_text + "," + TA_val_text + "\n").split(",")
         danskeFunds.append(row)
         
-        print(".no | Scraping " + fundname_text + " is done!")
+        #print(".no | Scraping " + fundname_text + " is done!")
         
         
     print("")
@@ -1189,7 +1056,7 @@ def danskeFunds2():
         fundname = container.findAll("span", {"class":"headline-text"})
         fundname_text = fundname[0].text.replace(",", "").strip()
         isin_locate = container.findAll("td", {"class":"table-data-value"})
-        isin_text = isin_locate[0].text.replace(",", "").strip()
+        isin_text = isin_locate[1].text.replace(",", "").strip()
         
         
         full_link_for_name_text = "https://www.danskeinvest.fi/web/show_fund.produkt?p_nId=1181&p_nFundgroup=74&p_nFund=" + id
@@ -1213,36 +1080,21 @@ def danskeFunds2():
             
         NAV_four_info_TA_date = fund_NAV_list.find("td", {"class":"tTop tleft tOdd"})
         NAV_four_info_TA_val = fund_NAV_list.find("td", {"class":"tTop trightbold tOdd bordered_last"})
-        NAV_four_info_NAV_date = fund_NAV_list.find("td", {"class":"tTop tleft tEven"})
-        NAV_four_info_NAV_val = fund_NAV_list.find("td", {"class":"tTop trightbold tEven bordered_last"})
-            
-        TA_date = NAV_four_info_TA_date
-        try:
-            TA_date_text = TA_date.text.replace(",", "").strip()
-        except:
+        
+        if NAV_four_info_TA_date == None:
             TA_date_text = "NO INFO ON WEBSITE"
-            
-        TA_val = NAV_four_info_TA_val
-        try:
-            TA_val_text = TA_val.text.replace(",", "").strip()
-        except:
+        else:
+            TA_date_text = NAV_four_info_TA_date.text.replace(",", "").strip()
+        
+
+        if NAV_four_info_TA_val == None:
             TA_date_text = "NO INFO ON WEBSITE"
-            
-        NAV_date = NAV_four_info_NAV_date
-        try:
-            NAV_date_text = NAV_date.text.replace(",", "").strip()
-        except:
-            TA_date_text = "NO INFO ON WEBSITE"
-            
-        NAV_val = NAV_four_info_NAV_val
-        try:
-            NAV_val_text = NAV_val.text.replace(",", "").strip()
-        except:
-            TA_date_text = "NO INFO ON WEBSITE"
+        else:
+            TA_val_text = NAV_four_info_TA_val.text.replace(",", "").strip()
         
         se_counter = se_counter + 1
         
-        row = (".se" + "," + fundname_text + "," + isin_text + "," + NAV_date_text + "," + NAV_val_text + "," + TA_date_text + "," + TA_val_text + "," + full_link_for_source + "\n").split(",")
+        row = (fundname_text + "," + isin_text + "," + TA_date_text + "," + TA_val_text + "\n").split(",")
         danskeFunds.append(row)
 
     return render_template('danske2.html', danskeFunds=danskeFunds)
@@ -1407,12 +1259,12 @@ def currency():
 # Run app
 #
 ######################################################
-"""
+
 if __name__ == '__main__':
     app.secret_key = os.urandom(24)
     app.run(debug=True, threaded=True)
 
-
+"""
 app = Flask(__name__)
 app.secret_key = 'ghdjrit8564hnbvn834z3hed/'
 

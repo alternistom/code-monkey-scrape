@@ -22,28 +22,20 @@
       <table class="table mx-auto w-auto small">
         <thead>
           <tr id="download">
-              <th scope="col">Site</th>
               <th scope="col">Fund Name</th>
               <th scope="col">ISIN</th>
-              <th scope="col">NAV Date</th>
-              <th scope="col">NAV Value</th>
               <th scope="col">TA Date</th>
               <th scope="col">TA Value</th>
-              <th scope="col">Link</th>
           </tr>
         </thead>
 
         <tbody>
-          {% for site, fund, isin, navdt, navval, tadt, taval, link in danskeFunds %}
+          {% for fund, isin, tadt, taval in danskeFunds %}
             <tr id="download">
-                <td>{{ site }}</td>
                 <td>{{ fund }}</td>
                 <td>{{ isin }}</td>
-                <td>{{ navdt }}</td>
-                <td>{{ navval }}</td>
                 <td>{{ tadt }}</td>
                 <td>{{ taval }}</td>
-                <td>{{ link }}</td>
             </tr>
           {% endfor %}
         </tbody>
