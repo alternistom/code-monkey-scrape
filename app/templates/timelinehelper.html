@@ -1,0 +1,140 @@
+<html> 
+<head>
+
+<title>Timeline Helper & IDC USD prices</title>
+<style>
+
+#drop_zone {
+ background-color: lightblue;
+ border: 5px solid black;
+ display: inline-block;
+ padding: 20px;
+}
+
+</style>
+
+</head> 
+
+<p hidden id="year"></p>
+<p hidden id="month"></p>
+<p hidden id="day"></p>
+
+<script type="text/javascript">
+var months = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"];
+var n = new Date();
+var y = n.getFullYear();
+var m = n.getMonth();
+var d = n.getDate();
+document.getElementById("year").innerHTML = y;
+document.getElementById("month").innerHTML = months[m];
+document.getElementById("day").innerHTML = d;
+</script>
+
+<div>
+<div id="drop_zone">
+<form>
+<center>Go to USD Prices in IDC</center></br>
+<b>SecID/ISIN:</b> <input type="text" onfocus="this.value=''" id="IDC" name="IDC"><br>
+<input type="button" value="Go to Prices" onClick="window.open('https://360view.interactivedata.com/desktop/cgi/sec-info/sec-info.cgi?idctoken=&tuser=&secid=' + document.getElementById('IDC').value + '&func=IP&subf=H&day=' + ('0'+document.getElementById('day').innerHTML).slice(-2) + '&mon=' + document.getElementById('month').innerHTML + '&year=' + document.getElementById('year').innerHTML + '&x=27&y=7&freq=m&conv=d&adj=a&default_reltime=1500')">
+</form>
+</div>
+</br>
+</br>
+
+<script type="text/javascript">
+
+function nchange() { 
+var first = document.getElementById("textbox1").value;
+var second = document.getElementById("textbox2").value;
+var third = document.getElementById("textbox4").value;
+var answer = "The Fund changed its name from " + first + " to " + second + " on " + third + ".";
+
+var subadviser = "The Fund changed its Sub-Adviser from " + first + " to " + second + " on " + third + "."
+var assmanagement = "The Fund changed its Asset Manager from " + first + " to " + second + " on " + third + "."
+var invmanagement = "The Fund changed its Investment Manager from " + first + " to " + second + " on " + third + "."
+var manco = "The Fund changed its Management Company from " + first + " to " + second + " on " + third + "."
+
+textbox3.value=answer;
+textbox16.value=subadviser ;
+textbox17.value=assmanagement ;
+textbox18.value=invmanagement ;
+textbox19.value=manco ;
+
+ } 
+ 
+function faction() { 
+var first = document.getElementById("textbox9").value;
+var second = document.getElementById("textbox11").value;
+var merger = "The " + first + " merged into this Fund on " + second + "."
+var liq = "The " + first + " liquidated on " + second + "."
+var inc = "The Fund launched on " + second + "."
+textbox13.value=merger
+textbox14.value=liq
+textbox15.value=inc
+
+ } 
+ 
+ 
+</script>
+
+<body> 
+
+<div>
+<div id="drop_zone">
+
+Old Name: <br/>
+<input type="text" name="textbox1" id="textbox1" size="50" /> <br/>
+New Name: <br/>
+<input type="text" name="textbox2" id="textbox2" size="50" /> <br/>
+Date (eg. April 20, 2018): <br/>
+<input type="text" name="textbox4" id="textbox4" size="50" /> <br/> <br/>
+<input type="submit" name="button" id="button1" onclick="nchange()" value="Generate sentences" />
+<br/> <br/>
+<b>Name Change</b> | Account timeline sentence: <br/>
+<input type="text" name="textbox3" id="textbox3" readonly="true" size="200"/><br/><br/>
+
+<b>Sub-Adviser Change</b> | Account timeline sentence: <br/>
+<input type="text" name="textbox16" id="textbox16" readonly="true" size="200"/><br/><br/>
+
+<b>Asset Manager Change</b> | Account timeline sentence: <br/>
+<input type="text" name="textbox17" id="textbox17" readonly="true" size="200"/><br/><br/>
+
+<b>Investment Manager Change</b> | Account timeline sentence: <br/>
+<input type="text" name="textbox18" id="textbox18" readonly="true" size="200"/><br/><br/>
+
+<b>Management Company Change</b> | Account timeline sentence: <br/>
+<input type="text" name="textbox19" id="textbox19" readonly="true" size="200"/>
+
+</div>
+<br/>
+<br/>
+<div>
+<div id="drop_zone">
+
+Fund Name: <br/>
+<input type="text" name="textbox9" id="textbox9" size="50" /> <br/>
+Date (eg. April 20, 2018): <br/>
+<input type="text" name="textbox11" id="textbox11" size="50" /> <br/> <br/>
+
+<input type="submit" name="button" id="button1" onclick="faction()" value="Generate sentences" />
+<br/> <br/>
+
+<b>Merger</b> | Account timeline sentence: <br/>
+<input type="text" name="textbox13" id="textbox13" readonly="true" size="200"/><br/><br/>
+
+<b>Liquidation</b> | Account timeline sentence: <br/>
+<input type="text" name="textbox14" id="textbox14" readonly="true" size="200"/><br/><br/>
+
+<b>Inception</b> | Account timeline sentence: <br/>
+<input type="text" name="textbox15" id="textbox15" readonly="true" size="200"/><br/><br/>
+
+
+</div><br/>
+
+<div style="font-style: italic">On error please contact tamas.fabian@dealogic.com</div>
+
+</body>
+
+
+
+</html>

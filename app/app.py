@@ -42,6 +42,22 @@ def home():
 def focus():
     return render_template('focus.html')
 
+@app.route('/useful')
+def useful():
+    return render_template('useful.html')
+
+@app.route('/namecreator')
+def namecreator():
+    return render_template('namecreator.html')
+
+@app.route('/openedgar')
+def openedgar():
+    return render_template('openedgar.html')
+
+@app.route('/timelinehelper')
+def timelinehelper():
+    return render_template('timelinehelper.html')
+
 @app.route('/scrape')
 def scrape():
     #flash(request.args.get('url'), 'success')
@@ -108,6 +124,57 @@ def cnmv():
         cnmvresults.append(row)
 
     return render_template('cnmv.html', cnmvresults=cnmvresults, cmnvfile=cmnvfile)
+
+
+@app.route('/edgardaily')
+def edgardaily():
+
+    fileDate = request.args.get('date')
+    fileType = str(request.args.get('type'))
+
+    from urllib.request import urlopen
+    import re
+
+    #fileDate = input("Please input the date in YYYYMMDD format (e.g. 20200122) : ")
+
+    base_url = "https://www.sec.gov/Archives/edgar/daily-index/"
+    CIK_search_url = "https://www.sec.gov/cgi-bin/browse-edgar?CIK="
+    dailyfilings = []
+    edgarNameandLinks = []
+
+    yearUrl = fileDate[:4]
+    monthUrl = fileDate[4:-2]
+
+    if 1 <= int(monthUrl) <= 3:
+        QTR = "QTR1"
+
+    if 4 <= int(monthUrl) <= 6:
+        QTR = "QTR2"
+
+    if 7 <= int(monthUrl) <= 9:
+        QTR = "QTR3"
+
+    if 10 <= int(monthUrl) <= 12:
+        QTR = "QTR4"
+
+    lines = urlopen(str(base_url) + str(yearUrl) + "/" + str(QTR) + "/" + "crawler." + fileDate + ".idx", timeout = 4).read().decode('ascii').split("\n")
+    #lines = ','.join(str(v) for v in linelist)
+    
+    for line in lines:
+        if " " + fileType + " " in line:         
+            edgarName = re.sub(r" " + str(fileType) + ".*","",line).replace(",","").strip()
+            #edgarLink = re.sub(r".* http","http",line)
+            edgarLink = line.strip().rsplit(" ", 1)[1]
+            CIK = " ".join(line.split()).rsplit(" ", 5)[3]
+            CIKLink = CIK_search_url + str(CIK)
+            row = (edgarName + "," + CIK + "," + CIKLink + "," + fileType + "," + str(fileDate) + "," + edgarLink).split(",")
+            dailyfilings.append(row)      
+            
+    if dailyfilings == []:
+        row = ("No filling for " + fileType + " for this day: " + str(fileDate) + "," + "" + "," + "" + "," + "" + "," + "").split(",")
+        dailyfilings.append(row)
+
+    return render_template('edgardaily.html', dailyfilings=dailyfilings)
 
 
 # render results to screen
@@ -232,6 +299,9 @@ def results():
 
             if assetCategoryText == 'DBT':
                 assetCategoryText = 'Debt'
+
+            if assetCategoryText == 'RA':
+                assetCategoryText = 'Repurchase Agreement'
 
             if assetCategoryText == 'STIV':
                 assetCategoryText = 'Short-term investment vehicle'
