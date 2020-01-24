@@ -161,11 +161,12 @@ def edgardaily():
     #lines = ','.join(str(v) for v in linelist)
     
     for line in lines:
-        if " " + fileType + " " in line:         
+        if " " + fileType + " " in line:
+
             edgarName = re.sub(r" " + str(fileType) + ".*","",line).replace(",","").strip()
             #edgarLink = re.sub(r".* http","http",line)
             edgarLink = line.strip().rsplit(" ", 1)[1]
-            CIK = " ".join(line.split()).rsplit(" ", 5)[3]
+            CIK = " ".join(line.split()).rsplit(" ", 4)[2]
             CIKLink = CIK_search_url + str(CIK)
             row = (edgarName + "," + CIK + "," + CIKLink + "," + fileType + "," + str(fileDate) + "," + edgarLink).split(",")
             dailyfilings.append(row)      
@@ -176,6 +177,58 @@ def edgardaily():
 
     return render_template('edgardaily.html', dailyfilings=dailyfilings)
 
+@app.route('/edgarquarterly')
+def edgarquarterly():
+
+    fileDate = request.args.get('date')
+    fileQTR = request.args.get('qtr')
+    fileType = str(request.args.get('type'))
+
+    from urllib.request import urlopen
+    import re
+
+    #fileDate = input("Please input the date in YYYYMMDD format (e.g. 20200122) : ")
+
+    base_url = "https://www.sec.gov/Archives/edgar/full-index/"
+    CIK_search_url = "https://www.sec.gov/cgi-bin/browse-edgar?CIK="
+    dailyfilings = []
+    edgarNameandLinks = []
+
+    yearUrl = fileDate[:4]
+    monthUrl = fileDate[5:8]
+
+   
+
+    lines = urlopen(str(base_url) + str(fileDate) + "/" + str(fileQTR) + "/" + "crawler.idx", timeout = 4).read().decode('ascii').split("\n")
+    #lines = ','.join(str(v) for v in linelist)
+    
+    for line in lines:
+        if " " + fileType + " " in line:         
+            edgarName = re.sub(r" " + str(fileType) + ".*","",line).replace(",","").strip()
+            #edgarLink = re.sub(r".* http","http",line)
+            edgarLink = line.strip().rsplit(" ", 1)[1]
+            #CIK = " ".join(line.split()).rsplit(" ", 5)[3]
+            #filingDate = " ".join(line.split()).rsplit(" ", 5)[4]
+            CIK = " ".join(line.split()).rsplit(" ", 4)[2]
+            filingDate = " ".join(line.split()).rsplit(" ", 4)[3]
+            CIKLink = CIK_search_url + str(CIK)
+            row = (edgarName + "," + CIK + "," + CIKLink + "," + fileType + "," + str(filingDate) + "," + edgarLink).split(",")
+            dailyfilings.append(row)      
+            
+    if dailyfilings == []:
+        row = ("No filling for " + fileType + " for this day: " + str(filingDate) + "," + "" + "," + "" + "," + "" + "," + "").split(",")
+        dailyfilings.append(row)
+
+    def Sort(dailyfilings):
+        return(sorted(dailyfilings, key = lambda x: x[4]))
+
+    sortedList = (Sort(dailyfilings))
+
+    filingsNumber = len(sortedList)
+
+
+
+    return render_template('edgarquarterly.html', sortedList=sortedList, filingsNumber=filingsNumber)
 
 # render results to screen
 @app.route('/results')
