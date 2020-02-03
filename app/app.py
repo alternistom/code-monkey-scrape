@@ -38,6 +38,10 @@ app.secret_key = "He thrust every elf Far back on the shelf High up on the mount
 def home():
     return render_template('home.html')
 
+@app.route('/favicon.ico')
+def favicon():
+    return redirect(url_for('static', filename='favicon.ico'))
+
 @app.route('/focus')
 def focus():
     return render_template('focus.html')
