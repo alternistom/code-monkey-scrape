@@ -62,6 +62,8 @@ def openedgar():
 def timelinehelper():
     return render_template('timelinehelper.html')
 
+
+
 @app.route('/scrape')
 def scrape():
     #flash(request.args.get('url'), 'success')
@@ -271,6 +273,10 @@ def results():
         fundName = soup.find("seriesName")
         fundNameString = fundName.text.replace('.','').replace("/","")
 
+        if fundNameString == "NA":
+            fundName = soup.find("regName")
+            fundNameString = fundName.text.replace('.','').replace("/","")
+
         totAssets = soup.find("totAssets").text
 
         reportDate = soup.find("repPdDate")
@@ -295,9 +301,14 @@ def results():
             issueNamesTextFirstTag = issueNamesTextFirst.find("name").text #because name tag would only return the name of the tag, FUCK
             issueNamesText = str(issueNamesTextFirstTag).replace("\n","").replace(",","")
 
+            if issueNamesText == "N/A":
+                issueNamesTextFirst = onlySecs[counter]
+                issueNamesTextFirstTag = issueNamesTextFirst.find("title").text #because name tag would only return the name of the tag, FUCK
+                issueNamesText = str(issueNamesTextFirstTag).replace("\n","").replace(",","")
+
             isinTextFirst = onlySecs[counter].isin
             isinTextStringer = str(isinTextFirst)
-            isinText = isinTextStringer.replace('<isin value="','').replace('"/>','')
+            isinText = isinTextStringer.replace('<isin value="','').replace('"/>','').replace('<nport:isin value="','')
 
             if isinText == "None":
                 isinText = ""
@@ -316,7 +327,7 @@ def results():
 
             tickerTextFirst = onlySecs[counter].ticker
             tickerTextStringer = str(tickerTextFirst)
-            tickerText = tickerTextStringer.replace('<ticker value="','').replace('"/>','')
+            tickerText = tickerTextStringer.replace('<ticker value="','').replace('"/>','').replace('<nport:ticker value="','')
 
             if tickerText == "None":
                 tickerText = ""
@@ -341,6 +352,10 @@ def results():
 
             cusipTextFirst = onlySecs[counter].cusip.text
             cusipText = str(cusipTextFirst).replace("\n","")
+
+            if cusipText == "N/A":
+                cusipTextFirst = onlySecs[counter].other
+                cusipText = str(cusipTextFirst).replace('<other otherDesc="Primary Identifier" value="','').replace('"/>','').replace("\n","")           
 
             if cusipText == "000000000":
                 cusipText = ""
@@ -389,6 +404,15 @@ def results():
 
             if assetCategoryText == 'DE':
                 assetCategoryText = 'Derivative-equity'
+
+            if assetCategoryText == 'RE':
+                assetCategoryText = 'REIT'
+
+            if assetCategoryText == 'DO':
+                assetCategoryText = 'Warrant'
+
+            if assetCategoryText == 'ABS-CBDO':
+                assetCategoryText = 'ABS-collateralized bond-debt obligation'
 
             if assetCategoryText == None:
                 assetCategoryText = ""
