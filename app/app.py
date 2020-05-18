@@ -360,6 +360,12 @@ def results():
             if cusipText == "000000000":
                 cusipText = ""
 
+            sedolText = ""
+
+            if len(cusipText) == 7:
+                sedolText = cusipText
+                cusipText = ""
+
             if onlySecs[counter].assetCat == None:
                 assetCategoryText = onlySecs[counter].assetConditional["desc"]
             else:
@@ -445,7 +451,7 @@ def results():
             args = []
             
             
-            row = (str(issueNamesText) + "," + isinText + "," + shareNumberText + "," + valueUSDText + "," + payoffProfileText + "," + assetCategoryText + "," + tickerPlusCountry + ',' + cusipText).split(",")
+            row = (str(issueNamesText) + "," + isinText + "," + shareNumberText + "," + valueUSDText + "," + payoffProfileText + "," + assetCategoryText + "," + tickerPlusCountry + ',' + cusipText + "'" + ',' + sedolText + "'").split(",")
 
             results.append(row)
 
