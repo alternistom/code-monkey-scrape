@@ -26,11 +26,16 @@
     <div class="row">
       <div class="col">
         <ul>
-          <li><b>Fundname:</b> {{ fundNameString }}</li>
-          <li><b>Report Date:</b> {{ reportDateString }}</li>
-          <li><b>Total Assets:</b> {{ totAssets }}</li>
-          <li><b>CIK:</b> {{ regCIK }}</li>
-          <li><b>Filename:</b> {{ csvname }}</li>
+          <li><b>Fundname:</b><br> {{ fundNameString }}</li>
+          <li><b>Report Date:</b><br> {{ reportDateString }}</li>
+          <li><b>CIK:</b><br> {{ regCIK }}</li>
+          <li><b>Filename:</b><br> {{ csvname }}</li>
+          <li><b>Total Assets (in xml file):</b><br> {{ totAssets }}</li>
+          <li><b>Total Market Value (counted from report):</b><br> {{ invval }}</li>
+          <li><b>From this EQUITY:</b><br> {{ eqval }}</li>
+          <li><b>From this FIXED INCOME:</b><br> {{ fival }}</li>
+          <li><b>From this OTHER INVESTMENT:</b><br> {{ otval }}</li>
+          <li><b>Number of investments:</b><br> {{ counter }}</li>
         </ul>
         <br>
       </div>

@@ -46,6 +46,10 @@ def favicon():
 def focus():
     return render_template('focus.html')
 
+@app.route('/vba')
+def vba():
+    return render_template('vba.html')
+
 @app.route('/useful')
 def useful():
     return render_template('useful.html')
@@ -163,22 +167,29 @@ def edgardaily():
     if 10 <= int(monthUrl) <= 12:
         QTR = "QTR4"
 
-    lines = urlopen(str(base_url) + str(yearUrl) + "/" + str(QTR) + "/" + "crawler." + fileDate + ".idx", timeout = 4).read().decode('ascii').split("\n")
-    #lines = ','.join(str(v) for v in linelist)
-    
-    for line in lines:
-        if " " + fileType + " " in line:
+    try:
 
-            edgarName = re.sub(r" " + str(fileType) + ".*","",line).replace(",","").strip()
-            #edgarLink = re.sub(r".* http","http",line)
-            edgarLink = line.strip().rsplit(" ", 1)[1]
-            CIK = " ".join(line.split()).rsplit(" ", 4)[2]
-            CIKLink = CIK_search_url + str(CIK)
-            row = (edgarName + "," + CIK + "," + CIKLink + "," + fileType + "," + str(fileDate) + "," + edgarLink).split(",")
-            dailyfilings.append(row)      
-            
-    if dailyfilings == []:
-        row = ("No filling for " + fileType + " for this day: " + str(fileDate) + "," + "" + "," + "" + "," + "" + "," + "").split(",")
+        lines = urlopen(str(base_url) + str(yearUrl) + "/" + str(QTR) + "/" + "crawler." + fileDate + ".idx", timeout = 4).read().decode('ascii').split("\n")
+        #lines = ','.join(str(v) for v in linelist)
+        
+        for line in lines:
+            if " " + fileType + " " in line:
+
+                edgarName = re.sub(r" " + str(fileType) + ".*","",line).replace(",","").strip()
+                #edgarLink = re.sub(r".* http","http",line)
+                edgarLink = line.strip().rsplit(" ", 1)[1]
+                CIK = " ".join(line.split()).rsplit(" ", 4)[2]
+                CIKLink = CIK_search_url + str(CIK)
+                row = (edgarName + "," + CIK + "," + CIKLink + "," + fileType + "," + str(fileDate) + "," + edgarLink).split(",")
+                dailyfilings.append(row)      
+                
+        if dailyfilings == []:
+            row = ("No filling for " + fileType + " for this day: " + str(fileDate) + "," + "" + "," + "" + "," + "" + "," + "" + ",").split(",")
+            dailyfilings.append(row)
+
+    except:
+
+        row = ("No index file found on sec.gov for this day: " + str(fileDate) +  ". If you are sure there should be one then please double check here: https://www.sec.gov/Archives/edgar/daily-index/" + "," + "" + "," + "" + "," + "" + "," + "" + ",").split(",")
         dailyfilings.append(row)
 
     return render_template('edgardaily.html', dailyfilings=dailyfilings)
@@ -245,6 +256,15 @@ def results():
     urlnostrip = request.args.get('url')
     correct_url = False
     url = urlnostrip.strip()
+
+    invval = 0
+
+    equitylist = ["Equity-common", "ADR", "EDR", "GDR", "ETF", "Exchange traded fund", "REIT", "depository receipt", "Investment company", "mutual fund", "units", "Savings Share", "Common stock (royalty trust)", "Master limited partnership", "Stapled Security", "Equity-Depositary Receipt", "Equity Funds", "Equity-preferred", "Equity-Reit", "Equity-Unit", "Registered Investment Company", "EQUITYFUND", "PREFERRED", "Other-Partnership"]
+    fixedlist = ["ABS-collateralized bond-debt obligation", "ABS-mortgage backed security", "ABS-other", "DCO", "DCR", "Debt", "Derivative-equity", "Derivative-foreign exchange", "Derivative-interest rate", "Loan", "Short-term investment vehicle", "Repurchase Agreement", "Right", "Rights", "Structured note", "Warrant", "private fund"]
+
+    eqval = 0
+    fival = 0
+    otval = 0
 
     tickerPlusCountry = ''
 
@@ -323,7 +343,9 @@ def results():
             valueUSDText = str(valueUSDTextFirst).replace("\n","")
 
             if valueUSDText == None:
-                valueUSDText = ""
+                valueUSDText = 0
+
+            invval += float(valueUSDText)
 
             tickerTextFirst = onlySecs[counter].ticker
             tickerTextStringer = str(tickerTextFirst)
@@ -424,6 +446,18 @@ def results():
                 assetCategoryText = ""
 
 
+            
+
+            if assetCategoryText in equitylist and payoffProfileText == "Long":
+                eqval += float(valueUSDText)
+
+            elif assetCategoryText in fixedlist and payoffProfileText == "Long":
+                fival += float(valueUSDText)
+
+            elif assetCategoryText not in equitylist and assetCategoryText not in fixedlist and payoffProfileText == "Long":
+                otval += float(valueUSDText)
+
+
             """
             issuerCategoryTextFirst = issuerCategory[counter]
             issuerCategoryText = issuerCategoryTextFirst.text
@@ -462,10 +496,14 @@ def results():
             flash('This report is empty, couldn\'t parse contents! "%s"' % url, 'danger')
             proTip = 'This error means that the report contains no issues! The Fund could be under liquidation or merger, please investigate...'
             
-    
-    
+    totAssets = '{:,}'.format(float(totAssets))
+    invval = '{:,}'.format(invval)
+    eqval = '{:,}'.format(eqval)
+    fival = '{:,}'.format(fival)
+    otval = '{:,}'.format(otval)
 
-    return render_template('results.html', proTip=proTip, results=results, fundNameString=fundNameString, reportDateString=reportDateString, regCIK=regCIK, totAssets=totAssets, csvname=csvname, tickerPlusCountry=tickerPlusCountry)
+
+    return render_template('results.html', proTip=proTip, results=results, fundNameString=fundNameString, reportDateString=reportDateString, regCIK=regCIK, totAssets=totAssets, csvname=csvname, tickerPlusCountry=tickerPlusCountry, counter=counter, invval=invval, eqval=eqval, fival=fival, otval=otval)
 
 
 
